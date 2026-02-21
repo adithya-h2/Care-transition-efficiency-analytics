@@ -49,8 +49,8 @@ Then open the URL shown in the terminal (typically http://localhost:8501).
 - **Transfer Efficiency** = Transfers out of CBP / Children in CBP custody  
 - **Discharge Effectiveness** = Discharges from HHS / Children in HHS care  
 - **Pipeline Throughput** = Discharges / Intake  
-- **CBP Backlog Change** = Intake − Transfers  
-- **HHS Backlog Change** = Transfers − Discharges  
+- **CBP Backlog Change** = Intake - Transfers  
+- **HHS Backlog Change** = Transfers - Discharges  
 - Cumulative backlogs = cumulative sum of the above changes.  
 
 All ratios use safe division (only when denominator > 0). See the in-app **Generate report** section for full methodology and definitions.
