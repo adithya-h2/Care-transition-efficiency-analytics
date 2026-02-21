@@ -96,6 +96,8 @@ Care transitions across CBP and HHS involve constrained capacity, variable inflo
 
 ## Author
 
-**Name:** Adithya N C  
-**Role:** Data Science Intern / Developer of the Care Transition Efficiency & Placement Outcome Analytics project.  
-**GitHub:** [@adithya-h2](https://github.com/adithya-h2)
+## Author
+
+**Adithya N C**  
+Data Science Intern  
+GitHub: https://github.com/adithya-h2
