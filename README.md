@@ -96,8 +96,6 @@ Care transitions across CBP and HHS involve constrained capacity, variable inflo
 
 ## Author
 
-## Author
-
 **Adithya N C**  
 Data Science Intern  
 GitHub: https://github.com/adithya-h2
