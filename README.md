@@ -1,63 +1,101 @@
+[▶ Live Streamlit App](https://care-transition-efficiency.streamlit.app/)
+
+***
+
 # Care Transition Efficiency & Placement Outcome Analytics
 
-Internship project analyzing how efficiently children move through a 3-stage care pipeline:
+## Live Demo Link
 
-1. **Stage 1:** CBP custody  
-2. **Stage 2:** HHS care  
-3. **Stage 3:** Discharge to sponsors  
+[https://care-transition-efficiency.streamlit.app/](https://care-transition-efficiency.streamlit.app/)
 
-Focus areas: process efficiency, bottleneck detection, backlog accumulation, outcome stability, and temporal patterns (weekday vs weekend, month-on-month).
+## Project Overview
 
-## Setup
+This project analyzes how efficiently children move through a three-stage care pipeline spanning CBP custody, HHS care, and final discharge to sponsors. It quantifies transfer and discharge performance, backlog dynamics, and temporal patterns to surface operational risks. A Streamlit dashboard exposes rolling metrics, alerts, and an auto-generated executive report to support data-driven policy and staffing decisions.
 
-1. **Python:** 3.9 or higher recommended.
+## Problem Statement
 
-2. **Install dependencies:**
+Care transitions across CBP and HHS involve constrained capacity, variable inflows, and multiple handoff points, creating risk of bottlenecks and growing backlogs. Operational teams need transparent, metric-driven visibility into where the pipeline is slowing down, how backlogs are evolving, and whether placement outcomes remain stable over time. This project addresses that gap with a reproducible analytics pipeline and interactive decision-support dashboard.
+
+## Methodology
+
+- Model the system as a three-stage pipeline: CBP custody → HHS care → Discharge to sponsors.
+- Ingest and clean daily HHS Unaccompanied Alien Children Program data, standardizing dates, sorting chronologically, and validating key fields.
+- Compute core efficiency, throughput, and backlog metrics, with optional 7-day rolling averages for stability assessment.
+- Derive temporal features (weekday/weekend, month) to analyze seasonality and sustained imbalances.
+- Generate an executive-style Markdown report summarizing methodology, key findings, bottlenecks, and policy recommendations.
+
+## Key Metrics Computed
+
+- **Transfer Efficiency** = Transfers out of CBP / Children in CBP custody.
+- **Discharge Effectiveness** = Discharges from HHS / Children in HHS care.
+- **Pipeline Throughput** = Discharges / Intake.
+- **CBP Backlog Change** = Intake − Transfers.
+- **HHS Backlog Change** = Transfers − Discharges.
+- Cumulative backlogs from the daily backlog deltas.
+- Optional 7-day rolling averages for all major ratios to smooth short-term noise.
+
+## Bottleneck Detection Approach
+
+- Compare intake, transfers, and discharges to identify where volume is accumulating across CBP and HHS stages.
+- Track backlog changes and cumulative backlogs to flag sustained growth periods rather than one-day spikes.
+- Apply threshold-based alerts when efficiency ratios fall below configured cutoffs or when backlogs grow over a sustained window.
+- Summarize bottleneck severity and location (CBP vs HHS) for inclusion in the generated report.
+
+## Key Insights
+
+- Single-date KPIs highlight current transfer efficiency, discharge effectiveness, and throughput for the selected date range.
+- Time-series views of efficiency and backlog metrics (with optional rolling averages) make it easy to spot structural slowdowns or recovery periods.
+- Weekday vs weekend and month-on-month comparisons reveal temporal patterns that can inform staffing, bed allocation, and scheduling policy.
+- Auto-generated narrative reports turn technical metrics into decision-ready language for non-technical stakeholders.
+
+## Tech Stack
+
+- **Language:** Python.
+- **Framework:** Streamlit for the interactive dashboard and report generation UI.
+- **Data:** HHS Unaccompanied Alien Children Program CSV (daily operational data).
+- **Core Libraries:** pandas, numpy, and related analytics/visualization packages (see `requirements.txt`).
+
+## How to Run Locally
+
+1. Clone the repository:  
+   ```bash
+   git clone https://github.com/adithya-h2/Care-transition-efficiency-analytics.git
+   cd Care-transition-efficiency-analytics
+   ```
+2. Create and activate a virtual environment (recommended):  
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate   # Windows: .venv\Scripts\activate
+   ```
+3. Install dependencies:  
    ```bash
    pip install -r requirements.txt
-   ```
+   ```  
+4. Place the HHS CSV file in the `Data/` directory as:  
+   - `Data/HHS_Unaccompanied_Alien_Children_Program.csv` (or override via `DEFAULT_DATA_PATH` in `config.py`).
+5. Launch the Streamlit app:  
+   ```bash
+   streamlit run app.py
+   ```  
+6. Open the local URL shown in the terminal (typically `http://localhost:8501`).
 
-3. **Data:** Place the HHS Unaccompanied Alien Children Program CSV in the `Data/` folder:
-   - `Data/HHS_Unaccompanied_Alien_Children_Program.csv`
+## Repository Structure
 
-   The default path is set in `config.py` (`DEFAULT_DATA_PATH`). You can override it when calling `data_loader.load_data(path="...")` if needed.
+| File / Folder                | Description                                                                 |
+|-----------------------------|-----------------------------------------------------------------------------|
+| `Data/`                     | Input data folder (HHS Unaccompanied Alien Children Program CSV). |
+| `config.py`                 | Centralized column names and constants, avoiding hardcoded strings. |
+| `data_loader.py`            | Data loading, date parsing, cleaning, sorting, and validation logic. |
+| `metrics.py`                | Computation of efficiency, throughput, backlog, and rolling metrics. |
+| `temporal_analysis.py`      | Weekday/weekend and month features, temporal aggregations, and patterns. |
+| `bottleneck_detection.py`   | Bottleneck and stagnation detection across CBP and HHS, with severity flags. |
+| `report_generator.py`       | Markdown executive report: methodology, metrics, findings, and recommendations. |
+| `app.py`                    | Streamlit dashboard UI, KPI cards, charts, alerts, and report generation. |
+| `requirements.txt`          | Python dependencies for reproducing the environment. |
+| `care_transition_report_upgraded.md` | Example generated report output for reference. |
 
-## Running the dashboard
+## Author
 
-From the project root:
-
-```bash
-streamlit run app.py
-```
-
-Then open the URL shown in the terminal (typically http://localhost:8501).
-
-## Project structure
-
-| File | Purpose |
-|------|--------|
-| `config.py` | Column names and constants (no hardcoded names in logic). |
-| `data_loader.py` | Load CSV, parse dates, clean HHS column, sort, validate. |
-| `metrics.py` | Transfer efficiency, discharge effectiveness, throughput, backlog changes, rolling averages, stability. |
-| `temporal_analysis.py` | Weekday/month columns, by-weekday means, weekend vs weekday, month-over-month, sustained imbalance. |
-| `bottleneck_detection.py` | CBP/HHS bottlenecks and stagnation; severity summaries. |
-| `report_generator.py` | Methodology, metric definitions, key findings, bottlenecks, interpretation, recommendations. |
-| `app.py` | Streamlit dashboard: date range, KPIs, charts, toggles, alerts, report generation. |
-
-## Metrics (summary)
-
-- **Transfer Efficiency** = Transfers out of CBP / Children in CBP custody  
-- **Discharge Effectiveness** = Discharges from HHS / Children in HHS care  
-- **Pipeline Throughput** = Discharges / Intake  
-- **CBP Backlog Change** = Intake - Transfers  
-- **HHS Backlog Change** = Transfers - Discharges  
-- Cumulative backlogs = cumulative sum of the above changes.  
-
-All ratios use safe division (only when denominator > 0). See the in-app **Generate report** section for full methodology and definitions.
-
-## Interpreting the dashboard
-
-- **KPI cards:** Latest-date values in the selected range for transfer efficiency, discharge effectiveness, and throughput.  
-- **Charts:** Use the sidebar to choose date range and whether ratio charts show raw or 7-day rolling averages.  
-- **Alerts:** Warnings appear when efficiency is below threshold or when sustained backlog growth is detected.  
-- **Report:** Click **Generate report** to produce methodology, findings, bottlenecks, and data-driven recommendations; you can download it as Markdown.
+**Name:** Adithya N C  
+**Role:** Data Science Intern / Developer of the Care Transition Efficiency & Placement Outcome Analytics project.  
+**GitHub:** [@adithya-h2](https://github.com/adithya-h2)
