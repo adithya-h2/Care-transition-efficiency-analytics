@@ -32,7 +32,7 @@ def render_metric_explanations():
     """Render the 'Understanding the Metrics' section."""
     with st.expander("ℹ️ Understanding the Metrics", expanded=False):
         st.markdown(
-            \"\"\"
+            """
             **1. Transfer Efficiency**
             - **Formula:** `Transfers / CBP Load`
             - **Meaning:** Shows the daily rate at which children are moved out of CBP facilities.
@@ -51,7 +51,7 @@ def render_metric_explanations():
             **4. Backlog Accumulation**
             - **Meaning:** The total accumulated surplus or deficit of daily processing.
             - **Interpretation:** If the line trends upwards, operations are creating a bottleneck.
-            \"\"\"
+            """
         )
 
 
