@@ -12,6 +12,7 @@ from typing import List, Dict, Any, Optional, Tuple
 import config
 import temporal_analysis
 import bottleneck_detection
+import forecasting
 
 
 def _filter_by_dates(
@@ -436,6 +437,24 @@ def section_final_conclusion(
     return "\n\n".join(lines)
 
 
+def section_forecasting(df: pd.DataFrame) -> str:
+    """Predictive Insights section using the forecasting module."""
+    if df.empty:
+        return "## Predictive Insights\n\nInsufficient data for forecasting."
+    
+    forecast_df = forecasting.generate_forecast(df, days=14)
+    if forecast_df.empty:
+         return "## Predictive Insights\n\nInsufficient data for forecasting."
+         
+    insights = forecasting.get_forecast_insights(forecast_df)
+    
+    lines = ["## 14-Day Predictive Insights", ""]
+    for insight in insights:
+        lines.append(f"- {insight}")
+        
+    return "\n".join(lines).strip()
+
+
 def generate_full_report(
     df: pd.DataFrame,
     bottlenecks: Optional[List[Dict[str, Any]]] = None,
@@ -474,6 +493,7 @@ def generate_full_report(
         section_key_findings(df, date_min, date_max),
         section_system_level_assessment(df, bottlenecks, date_min, date_max),
         section_identified_bottlenecks(bottlenecks),
+        section_forecasting(df),
         section_operational_interpretation(df, bottlenecks, sustained, date_min, date_max),
         section_policy_recommendations(df, bottlenecks, weekend_weekday, date_min, date_max),
         section_final_conclusion(df, bottlenecks, date_min, date_max),
